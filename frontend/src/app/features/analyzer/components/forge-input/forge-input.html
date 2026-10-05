@@ -1,0 +1,33 @@
+<form class="forge" (ngSubmit)="submit()" #f="ngForm">
+  <label class="field pkg">
+    <span>Package <em>name or npm link</em></span>
+    <input name="name" [ngModel]="name" (ngModelChange)="onNameChange($event)" (blur)="normalizeName()"
+           placeholder="rxjs or https://www.npmjs.com/package/rxjs"
+           autocomplete="off" spellcheck="false" required />
+    <small class="hint" aria-live="polite">
+      @if (loading()) {
+        Fetching versions of {{ resolved() }}…
+      } @else if (resolved() && versions().length) {
+        {{ versions().length }} versions of {{ resolved() }}
+      } @else if (resolved()) {
+        No versions found for {{ resolved() }}
+      } @else if (name.trim()) {
+        Not a valid package name or npm link
+      }
+    </small>
+  </label>
+  <label class="field">
+    <span>From version</span>
+    <input name="from" [(ngModel)]="from" placeholder="6.5.0" list="versions" autocomplete="off" required />
+  </label>
+  <label class="field">
+    <span>To version</span>
+    <input name="to" [(ngModel)]="to" placeholder="7.8.0" list="versions" autocomplete="off" required />
+  </label>
+  <button type="submit" [disabled]="!valid">Forge analysis</button>
+  <datalist id="versions">
+    @for (v of versions(); track v) {
+      <option [value]="v"></option>
+    }
+  </datalist>
+</form>

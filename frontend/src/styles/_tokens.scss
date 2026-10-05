@@ -1,0 +1,95 @@
+:root {
+  --bg-deep: #090807;
+  --bg-surface: #121110;
+  --bg-elevated: #1c1916;
+  --bg-card: #161412;
+
+  --accent-ember: #c8792a;
+  --accent-glow: #e8983e;
+  --accent-dim: rgba(200, 121, 42, 0.08);
+  --accent-border: rgba(200, 121, 42, 0.12);
+
+  --text-primary: #e4dfda;
+  --text-secondary: #847b72;
+  --text-muted: #524a42;
+
+  --breaking: #d44a3a;
+  --breaking-bg: rgba(212, 74, 58, 0.08);
+  --deprecated: #bf8c24;
+  --deprecated-bg: rgba(191, 140, 36, 0.08);
+  --new-feature: #47966b;
+  --new-feature-bg: rgba(71, 150, 107, 0.08);
+  --bugfix: #4e82ae;
+  --bugfix-bg: rgba(78, 130, 174, 0.08);
+}
+
+:root[data-theme='light'] {
+  --bg-deep: #f5f1ec;
+  --bg-surface: #ffffff;
+  --bg-elevated: #ffffff;
+  --bg-card: #ffffff;
+
+  --accent-ember: #b5651d;
+  --accent-glow: #d97f2e;
+  --accent-dim: rgba(181, 101, 29, 0.06);
+  --accent-border: rgba(181, 101, 29, 0.18);
+
+  --text-primary: #1f1a14;
+  --text-secondary: #5c5248;
+  --text-muted: #938876;
+
+  --breaking: #b8392a;
+  --breaking-bg: rgba(184, 57, 42, 0.07);
+  --deprecated: #96701c;
+  --deprecated-bg: rgba(150, 112, 28, 0.07);
+  --new-feature: #2f7350;
+  --new-feature-bg: rgba(47, 115, 80, 0.07);
+  --bugfix: #35628a;
+  --bugfix-bg: rgba(53, 98, 138, 0.07);
+}
+
+// Core
+$bg-deep: var(--bg-deep);
+$bg-surface: var(--bg-surface);
+$bg-elevated: var(--bg-elevated);
+$bg-card: var(--bg-card);
+
+// Accent — ember
+$accent-ember: var(--accent-ember);
+$accent-glow: var(--accent-glow);
+$accent-dim: var(--accent-dim);
+$accent-border: var(--accent-border);
+
+// Text
+$text-primary: var(--text-primary);
+$text-secondary: var(--text-secondary);
+$text-muted: var(--text-muted);
+
+// Categories
+$breaking: var(--breaking);
+$breaking-bg: var(--breaking-bg);
+$deprecated: var(--deprecated);
+$deprecated-bg: var(--deprecated-bg);
+$new-feature: var(--new-feature);
+$new-feature-bg: var(--new-feature-bg);
+$bugfix: var(--bugfix);
+$bugfix-bg: var(--bugfix-bg);
+
+$radius-sm: 6px;
+$radius-md: 10px;
+$radius-lg: 14px;
+
+$font-display: 'Space Grotesk', system-ui, sans-serif;
+$font-body: 'Inter', system-ui, sans-serif;
+$font-mono: 'JetBrains Mono', monospace;
+
+@mixin focus-ring {
+  outline: none;
+  border-color: $accent-ember;
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}

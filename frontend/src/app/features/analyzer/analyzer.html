@@ -1,0 +1,46 @@
+@switch (view()) {
+  @case ('input') {
+    <section class="hero">
+      <h1>Hewg</h1>
+      <p class="tagline">Your dependency blacksmith. Name a package and a version range; get a forged migration guide.</p>
+    </section>
+    <app-forge-input (submitted)="forge($event)" />
+    @if (starting()) {
+      <p class="note" role="status">Lighting the forge…</p>
+    }
+    @if (error(); as e) {
+      <p class="error" role="alert">{{ e }}</p>
+    }
+  }
+
+  @case ('loading') {
+    @if (analysisId(); as id) {
+      <app-loading-progress [analysisId]="id" (completed)="onCompleted()" (failed)="fail($event)" />
+    }
+  }
+
+  @case ('results') {
+    @if (analysis(); as a) {
+      <app-results-summary [analysis]="a" />
+
+      <div class="tabs" role="tablist" aria-label="Filter changes">
+        @for (f of filters; track f.key) {
+          <button type="button" role="tab" [class.active]="filter() === f.key"
+                  [attr.aria-selected]="filter() === f.key" (click)="filter.set(f.key)">
+            {{ f.label }}
+          </button>
+        }
+      </div>
+
+      <div class="cards">
+        @for (c of visible(); track c.id; let i = $index) {
+          <app-change-card [change]="c" [index]="i" />
+        } @empty {
+          <p class="empty">No changes in this category. Nothing to hammer out here.</p>
+        }
+      </div>
+
+      <button type="button" class="again" (click)="reset()">← Forge another</button>
+    }
+  }
+}

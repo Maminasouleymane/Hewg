@@ -1,0 +1,57 @@
+@use 'tokens' as *;
+
+:host { display: flex; flex-direction: column; min-height: 100vh; }
+
+.nav {
+  display: flex;
+  align-items: center;
+  padding: 18px 28px;
+  border-bottom: 1px solid $accent-border;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font: 600 15px $font-display;
+  letter-spacing: 0.5px;
+  color: $text-primary;
+  text-decoration: none;
+}
+
+.anvil {
+  color: $accent-ember;
+  animation: breathe 4s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { filter: drop-shadow(0 0 4px var(--accent-border)); }
+  50% { filter: drop-shadow(0 0 12px var(--accent-glow)); }
+}
+
+.theme-toggle {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid $accent-border;
+  border-radius: $radius-sm;
+  background: transparent;
+  color: $text-secondary;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+
+  &:hover { color: $accent-ember; border-color: $accent-ember; }
+  &:focus-visible { @include focus-ring; }
+}
+
+.page { flex: 1; width: 100%; max-width: 880px; margin: 0 auto; padding: 56px 20px 40px; }
+
+.footer {
+  padding: 24px;
+  text-align: center;
+  font: 400 12px $font-mono;
+  color: $text-muted;
+}

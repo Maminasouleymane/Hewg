@@ -1,0 +1,5 @@
+{"summary": "Moderate migration.", "total_breaking": 99, "total_deprecated": 0, "total_new_features": 0,
+ "changes": [{"id": "1", "category": "BREAKING", "severity": "CRITICAL", "title": "toPromise removed",
+ "affected_api": "Observable.toPromise", "explanation": "Removed", "migration_action": "Use lastValueFrom",
+ "before_code": "x.toPromise()", "after_code": "lastValueFrom(x)", "source_version": "7.0.0",
+ "reasoning": "listed", "doc_reference": "CHANGELOG 7.0.0"}]}

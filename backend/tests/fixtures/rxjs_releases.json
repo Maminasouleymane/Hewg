@@ -1,0 +1,5 @@
+[
+  {"tag_name": "7.0.0", "published_at": "2021-05-11T00:00:00Z", "body": "## Breaking Changes\n\n* removed `toPromise`"},
+  {"tag_name": "6.6.7", "published_at": "2021-05-01T00:00:00Z", "body": "### Bug Fixes\n\n* retryWhen"},
+  {"tag_name": "8.0.0-alpha.1", "published_at": null, "body": ""}
+]

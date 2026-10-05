@@ -1,0 +1,8 @@
+<div class="loading" role="status" aria-live="polite">
+  <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" [attr.aria-valuenow]="progress()">
+    <div class="fill" [style.width.%]="progress()"></div>
+  </div>
+  @for (m of [message()]; track m) {
+    <p class="msg">{{ m }}</p>
+  }
+</div>

@@ -1,0 +1,50 @@
+@use 'tokens' as *;
+
+.hero { margin-bottom: 32px; }
+h1 { font: 700 44px/1.1 $font-display; letter-spacing: -1px; }
+.tagline { margin: 12px 0 0; font: 400 17px $font-body; max-width: 560px; }
+
+.note { margin-top: 16px; color: $text-muted; font: 400 12px $font-mono; }
+.error {
+  margin-top: 16px;
+  padding: 12px 14px;
+  color: $breaking;
+  background: $breaking-bg;
+  border-radius: $radius-md;
+}
+
+.tabs {
+  display: inline-flex;
+  gap: 2px;
+  margin: 24px 0 16px;
+  padding: 3px;
+  background: $bg-surface;
+  border-radius: 999px;
+
+  button {
+    padding: 6px 14px;
+    background: transparent;
+    color: $text-secondary;
+    border: 0;
+    border-radius: 999px;
+    font: 500 12px $font-body;
+    cursor: pointer;
+    &.active { background: $bg-elevated; color: $text-primary; }
+  }
+}
+
+.cards { display: flex; flex-direction: column; gap: 12px; }
+.empty { padding: 32px 0; text-align: center; color: $text-muted; }
+
+.again {
+  margin-top: 28px;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: $accent-ember;
+  font: 500 13px $font-body;
+  cursor: pointer;
+  &:hover { color: $accent-glow; }
+}
+
+@media (max-width: 720px) { h1 { font-size: 34px; } }

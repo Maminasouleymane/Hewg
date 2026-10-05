@@ -1,0 +1,44 @@
+Analyze the migration path for the npm package "{package_name}"
+from version {from_version} to version {to_version}.
+
+Below are the release notes for each version in this range,
+in chronological order.
+
+--- RELEASE NOTES START ---
+
+{release_notes_sections}
+
+--- RELEASE NOTES END ---
+
+Produce a migration guide as a JSON object with this exact structure:
+
+{{
+  "summary": "2-3 sentence overview of migration difficulty and key risks",
+  "total_breaking": <number>,
+  "total_deprecated": <number>,
+  "total_new_features": <number>,
+  "changes": [
+    {{
+      "id": "<unique string>",
+      "category": "BREAKING | DEPRECATED | NEW_FEATURE | BUGFIX | INTERNAL",
+      "severity": "CRITICAL | HIGH | MEDIUM | LOW",
+      "title": "Short one-line description",
+      "affected_api": "The specific function, class, module, or config affected",
+      "explanation": "What changed and why it matters",
+      "migration_action": "What the developer needs to do (null if not applicable)",
+      "before_code": "Code example before migration (null if not applicable)",
+      "after_code": "Code example after migration (null if not applicable)",
+      "source_version": "Which version introduced this change",
+      "reasoning": "Why you classified it this way, including any uncertainty",
+      "doc_reference": "The section of the release notes this came from"
+    }}
+  ]
+}}
+
+Focus especially on changes that affect:
+1. Public API signatures (function parameters, return types)
+2. Import path changes
+3. Peer dependency requirements
+4. Default behavior changes
+5. Configuration format changes
+6. TypeScript type definition changes

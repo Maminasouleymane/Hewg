@@ -1,0 +1,70 @@
+@use 'tokens' as *;
+
+:host { display: block; animation: fade-up 0.4s ease both; }
+
+.card {
+  padding: 18px 20px;
+  background: $bg-card;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: $radius-md;
+  transition: border-color 0.2s;
+  &:hover { border-color: $accent-border; }
+}
+
+.top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.sev { margin-left: auto; font: 500 11px $font-body; color: $text-muted; }
+
+.dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  &.sev-critical { background: $breaking; box-shadow: 0 0 8px $breaking; }
+  &.sev-high { background: $accent-glow; }
+  &.sev-medium { background: $deprecated; }
+  &.sev-low { background: $text-muted; }
+}
+
+.tag {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font: 600 10px $font-body;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  &.cat-breaking { color: $breaking; background: $breaking-bg; }
+  &.cat-deprecated { color: $deprecated; background: $deprecated-bg; }
+  &.cat-new_feature { color: $new-feature; background: $new-feature-bg; }
+  &.cat-bugfix, &.cat-internal { color: $bugfix; background: $bugfix-bg; }
+}
+
+.title { font: 600 15px/1.4 $font-display; }
+
+.api {
+  display: inline-block;
+  margin: 8px 0 0;
+  padding: 2px 8px;
+  color: $accent-ember;
+  background: $accent-dim;
+  border-radius: 4px;
+  font: 400 12px $font-mono;
+}
+
+.explanation { margin: 10px 0 0; }
+
+.action {
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: $bg-elevated;
+  border-left: 2px solid $accent-ember;
+  border-radius: 0 $radius-sm $radius-sm 0;
+}
+.action-text { margin: 0 0 8px; color: $text-primary; }
+
+.diff {
+  margin: 0;
+  overflow-x: auto;
+  font: 400 12px/1.7 $font-mono;
+  code { display: block; }
+  span { display: block; white-space: pre; }
+  .del { color: $breaking; background: $breaking-bg; }
+  .add { color: $new-feature; background: $new-feature-bg; }
+}
+
+.source { margin: 12px 0 0; font: 400 11px $font-mono; color: $text-muted; }

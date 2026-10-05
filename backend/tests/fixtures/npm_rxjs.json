@@ -1,0 +1,6 @@
+{
+  "dist-tags": {"latest": "7.8.0"},
+  "repository": {"type": "git", "url": "git+https://github.com/ReactiveX/rxjs.git"},
+  "versions": {"6.5.0": {}, "6.6.7": {}, "7.0.0-beta.1": {}, "7.0.0": {}, "7.8.0": {}, "not-a-version": {}},
+  "time": {"6.5.0": "2019-04-01T00:00:00.000Z", "7.0.0": "2021-05-11T00:00:00.000Z"}
+}

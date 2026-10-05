@@ -1,0 +1,32 @@
+@let c = change();
+<article class="card">
+  <div class="top">
+    <span class="dot" [class]="'dot sev-' + c.severity.toLowerCase()" aria-hidden="true"></span>
+    <span class="tag" [class]="'tag cat-' + c.category.toLowerCase()">{{ c.category | label }}</span>
+    <span class="sev">{{ c.severity | label }}</span>
+  </div>
+
+  <h3 class="title">{{ c.title }}</h3>
+  @if (c.affected_api) {
+    <code class="api">{{ c.affected_api }}</code>
+  }
+  <p class="explanation">{{ c.explanation }}</p>
+
+  @if (c.migration_action || beforeLines().length || afterLines().length) {
+    <div class="action">
+      @if (c.migration_action) {
+        <p class="action-text">{{ c.migration_action }}</p>
+      }
+      @if (beforeLines().length || afterLines().length) {
+        <pre class="diff"><code>@for (l of beforeLines(); track $index) {<span class="del">- {{ l }}</span>
+}@for (l of afterLines(); track $index) {<span class="add">+ {{ l }}</span>
+}</code></pre>
+      }
+    </div>
+  }
+
+  <p class="source">
+    Introduced in {{ c.source_version }}
+    @if (c.doc_reference) { · {{ c.doc_reference }} }
+  </p>
+</article>

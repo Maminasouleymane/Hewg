@@ -1,0 +1,23 @@
+@use 'tokens' as *;
+
+.loading { padding: 48px 0; text-align: center; }
+
+.bar {
+  height: 2px;
+  background: $bg-elevated;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  background: linear-gradient(90deg, $accent-ember, $accent-glow);
+  transition: width 0.8s ease;
+}
+
+.msg {
+  margin: 22px 0 0;
+  font: 500 15px $font-display;
+  color: $text-secondary;
+  animation: fade-up 0.4s ease both;
+}

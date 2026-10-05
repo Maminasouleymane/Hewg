@@ -1,0 +1,24 @@
+<header class="head">
+  <div>
+    <h2 class="pkg">{{ analysis().package_name }}</h2>
+    <p class="range">{{ analysis().from_version }} → {{ analysis().to_version }}
+      · {{ analysis().versions_analyzed }} versions analyzed</p>
+  </div>
+  <div class="actions">
+    <button type="button" (click)="copyMarkdown()">{{ copied() ? 'Copied' : 'Copy as Markdown' }}</button>
+    <button type="button" (click)="exportJson()">Export JSON</button>
+  </div>
+</header>
+
+@if (analysis().summary) {
+  <p class="summary">{{ analysis().summary }}</p>
+}
+
+<div class="badges">
+  @for (b of badges(); track b.label) {
+    <div class="badge" [class]="'badge ' + b.cls">
+      <span class="count">{{ b.count }}</span>
+      <span class="label">{{ b.label }}</span>
+    </div>
+  }
+</div>

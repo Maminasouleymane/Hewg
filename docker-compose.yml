@@ -1,0 +1,24 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: hewg
+      POSTGRES_PASSWORD: hewg
+      POSTGRES_DB: hewg
+    ports: ["5432:5432"]
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hewg"]
+      interval: 3s
+      retries: 20
+  backend:
+    build: ./backend
+    env_file: [.env]
+    environment:
+      DATABASE_URL: postgresql+asyncpg://hewg:hewg@db:5432/hewg
+    ports: ["8000:8000"]
+    volumes: ["./backend:/srv"]
+    depends_on:
+      db: {condition: service_healthy}
+volumes:
+  pgdata:
