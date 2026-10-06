@@ -1,4 +1,5 @@
 import { Component, computed, input, signal } from '@angular/core';
+
 import { Analysis } from '../../models/analysis.model';
 
 @Component({
@@ -16,6 +17,8 @@ export class ResultsSummary {
       { label: 'Breaking', count: a.total_breaking, cls: 'breaking' },
       { label: 'Deprecated', count: a.total_deprecated, cls: 'deprecated' },
       { label: 'New features', count: a.total_new_features, cls: 'new' },
+      //TODO: BUGFIX count is not available in the Analysis model, so we need to calculate it from the changes array
+      { label: 'Bug fixes', count: a.changes.filter((c) => c.category === 'BUGFIX').length, cls: 'bugfix' },
     ];
   });
 

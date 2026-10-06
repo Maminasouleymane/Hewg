@@ -34,4 +34,5 @@
   &.breaking { color: $breaking; background: $breaking-bg; }
   &.deprecated { color: $deprecated; background: $deprecated-bg; }
   &.new { color: $new-feature; background: $new-feature-bg; }
+  &.bugfix { color: $bugfix; background: $bugfix-bg; }
 }

@@ -1,21 +1,23 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { Analysis, AnalyzeRequest, Category } from './models/analysis.model';
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
-import { Router } from '@angular/router';
+
 import { AnalysisService } from '../../core/services/analysis.service';
 import { ChangeCard } from './components/change-card/change-card';
 import { ForgeInput } from './components/forge-input/forge-input';
+import { HttpErrorResponse } from '@angular/common/http';
 import { LoadingProgress } from './components/loading-progress/loading-progress';
 import { ResultsSummary } from './components/results-summary/results-summary';
-import { Analysis, AnalyzeRequest, Category } from './models/analysis.model';
+import { Router } from '@angular/router';
 
 type View = 'input' | 'loading' | 'results';
-type Filter = 'ALL' | 'BREAKING' | 'DEPRECATED' | 'NEW_FEATURE';
+type Filter = 'ALL' | 'BREAKING' | 'DEPRECATED' | 'NEW_FEATURE' | 'BUGFIX';
 
 const FILTERS: { key: Filter; label: string }[] = [
   { key: 'ALL', label: 'All' },
   { key: 'BREAKING', label: 'Breaking' },
   { key: 'DEPRECATED', label: 'Deprecated' },
   { key: 'NEW_FEATURE', label: 'New' },
+  { key: 'BUGFIX', label: 'Bug Fix' },
 ];
 
 @Component({
