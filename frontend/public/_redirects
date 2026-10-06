@@ -1,4 +1,0 @@
-# Cloudflare Pages / Netlify rewrite: proxy /api/* to the deployed backend so the
-# frontend's existing relative `/api/...` HTTP calls keep working in production
-# unchanged. The trailing "200" makes this a transparent rewrite, not a redirect.
-/api/*  https://hewg-production.up.railway.app/api/:splat  200
