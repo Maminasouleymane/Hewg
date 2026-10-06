@@ -9,3 +9,4 @@ dist/
 # Local-only working docs - not meant to be published
 hewg-project.md
 ISSUES_LOG.md
+KEY_ARCHITECTURAL_DECISIONS.md
