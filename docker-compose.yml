@@ -16,6 +16,8 @@ services:
     env_file: [.env]
     environment:
       DATABASE_URL: postgresql+asyncpg://hewg:hewg@db:5432/hewg
+    # local dev override: the image's own CMD (used in production) omits --reload
+    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
     ports: ["8000:8000"]
     volumes: ["./backend:/srv"]
     depends_on:
