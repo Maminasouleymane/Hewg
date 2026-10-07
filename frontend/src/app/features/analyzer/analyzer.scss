@@ -15,7 +15,6 @@ h1 {
 .subtext {
   margin: 6px 0 0;
   font: 400 15px $font-body;
-  max-width: 560px;
   animation: fade-up 0.4s ease both 0.16s;
 
   .highlight { color: $accent-ember; font-weight: 500; }
