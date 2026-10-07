@@ -18,16 +18,23 @@
   </label>
   <label class="field">
     <span>From version</span>
-    <input name="from" [(ngModel)]="from" placeholder="6.5.0" list="versions" autocomplete="off" required />
+    <select name="from" [ngModel]="from()" (ngModelChange)="onFromChange($event)"
+            required [disabled]="!versions().length">
+      <option value="" disabled selected>{{ versions().length ? 'Select a version' : '—' }}</option>
+      @for (v of versions(); track v) {
+        <option [value]="v">{{ v }}</option>
+      }
+    </select>
   </label>
   <label class="field">
     <span>To version</span>
-    <input name="to" [(ngModel)]="to" placeholder="7.8.0" list="versions" autocomplete="off" required />
+    <select name="to" [ngModel]="to()" (ngModelChange)="to.set($event)"
+            required [disabled]="!from()">
+      <option value="" disabled selected>{{ from() ? 'Select a version' : '—' }}</option>
+      @for (v of toOptions(); track v) {
+        <option [value]="v">{{ v }}</option>
+      }
+    </select>
   </label>
   <button type="submit" [disabled]="!valid">Forge analysis</button>
-  <datalist id="versions">
-    @for (v of versions(); track v) {
-      <option [value]="v"></option>
-    }
-  </datalist>
 </form>

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, output, signal } from '@angular/core';
+import { Component, DestroyRef, computed, inject, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
@@ -19,12 +19,19 @@ export class ForgeInput {
   readonly submitted = output<AnalyzeRequest>();
 
   protected name = '';
-  protected from = '';
-  protected to = '';
+  protected readonly from = signal('');
+  protected readonly to = signal('');
   protected readonly versions = signal<string[]>([]);
   /** Package whose versions are loaded (or being loaded); '' when none. */
   protected readonly resolved = signal('');
   protected readonly loading = signal(false);
+
+  /** Versions newer than `from` - versions() is newest-first, so that's everything before its index. */
+  protected readonly toOptions = computed(() => {
+    const list = this.versions();
+    const idx = list.indexOf(this.from());
+    return idx === -1 ? [] : list.slice(0, idx);
+  });
 
   constructor() {
     this.lookups
@@ -34,6 +41,8 @@ export class ForgeInput {
         tap((pkg) => {
           this.resolved.set(pkg);
           this.versions.set([]);
+          this.from.set('');
+          this.to.set('');
         }),
         filter(Boolean),
         tap(() => this.loading.set(true)),
@@ -51,7 +60,7 @@ export class ForgeInput {
   }
 
   protected get valid() {
-    return !!(this.packageName && this.from.trim() && this.to.trim());
+    return !!(this.packageName && this.from().trim() && this.to().trim());
   }
 
   protected onNameChange(value: string) {
@@ -65,12 +74,17 @@ export class ForgeInput {
     if (pkg) this.name = pkg;
   }
 
+  protected onFromChange(value: string) {
+    this.from.set(value);
+    this.to.set(''); // a new "from" can invalidate the previously selected "to"
+  }
+
   protected submit() {
     if (!this.valid) return;
     this.submitted.emit({
       package_name: this.packageName,
-      from_version: this.from.trim(),
-      to_version: this.to.trim(),
+      from_version: this.from().trim(),
+      to_version: this.to().trim(),
     });
   }
 }
