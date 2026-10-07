@@ -17,6 +17,8 @@ h1 {
   font: 400 15px $font-body;
   max-width: 560px;
   animation: fade-up 0.4s ease both 0.16s;
+
+  .highlight { color: $accent-ember; font-weight: 500; }
 }
 
 .note { margin-top: 16px; color: $text-muted; font: 400 12px $font-mono; }
