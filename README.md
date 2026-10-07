@@ -103,3 +103,7 @@ See `backend/app/services/analyzer.py` and `backend/app/services/llm.py`.
 - Transient provider errors (rate limits, temporary overload) are retried with backoff
   automatically; a provider's own free-tier limits (requests/tokens per minute) still apply, so a
   very large version range will take longer due to pacing, not fail outright.
+
+## Author
+
+Built by [Mamina](https://github.com/Maminasouleymane).
