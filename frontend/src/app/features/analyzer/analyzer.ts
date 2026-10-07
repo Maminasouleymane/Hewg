@@ -17,7 +17,7 @@ const FILTERS: { key: Filter; label: string }[] = [
   { key: 'BREAKING', label: 'Breaking' },
   { key: 'DEPRECATED', label: 'Deprecated' },
   { key: 'NEW_FEATURE', label: 'New' },
-  { key: 'BUGFIX', label: 'Bug Fix' },
+  { key: 'BUGFIX', label: 'Bug fixes' },
 ];
 
 @Component({
