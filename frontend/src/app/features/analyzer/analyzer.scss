@@ -1,8 +1,23 @@
 @use 'tokens' as *;
 
 .hero { margin-bottom: 32px; }
-h1 { font: 700 44px/1.1 $font-display; letter-spacing: -1px; }
-.tagline { margin: 12px 0 0; font: 400 17px $font-body; max-width: 560px; }
+h1 {
+  font: 700 44px/1.1 $font-display;
+  letter-spacing: -1px;
+  animation: fade-up 0.4s ease both;
+}
+.tagline {
+  margin: 12px 0 0;
+  font: 600 19px $font-display;
+  color: $text-primary;
+  animation: fade-up 0.4s ease both 0.08s;
+}
+.subtext {
+  margin: 6px 0 0;
+  font: 400 15px $font-body;
+  max-width: 560px;
+  animation: fade-up 0.4s ease both 0.16s;
+}
 
 .note { margin-top: 16px; color: $text-muted; font: 400 12px $font-mono; }
 .error {
