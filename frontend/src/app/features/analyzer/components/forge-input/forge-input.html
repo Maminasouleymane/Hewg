@@ -20,7 +20,7 @@
     <span>From version</span>
     <select name="from" [ngModel]="from()" (ngModelChange)="onFromChange($event)"
             required [disabled]="!versions().length">
-      <option value="" disabled selected>{{ versions().length ? 'Select a version' : '—' }}</option>
+      <option value="" disabled selected>{{ versions().length ? 'Pick a version' : '—' }}</option>
       @for (v of versions(); track v) {
         <option [value]="v">{{ v }}</option>
       }
@@ -30,7 +30,7 @@
     <span>To version</span>
     <select name="to" [ngModel]="to()" (ngModelChange)="to.set($event)"
             required [disabled]="!from()">
-      <option value="" disabled selected>{{ from() ? 'Select a version' : '—' }}</option>
+      <option value="" disabled selected>{{ from() ? 'Pick a version' : '—' }}</option>
       @for (v of toOptions(); track v) {
         <option [value]="v">{{ v }}</option>
       }
