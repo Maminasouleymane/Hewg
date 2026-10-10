@@ -3,7 +3,7 @@ import time
 import uuid
 
 import httpx
-from openai import BadRequestError
+from openai import APIStatusError
 from sqlalchemy import select
 
 from app.api.sse import publish
@@ -29,6 +29,14 @@ async def _progress(aid: str, step: str, message: str, progress: int) -> None:
 
 MAX_SPLIT_DEPTH = 3  # a batch whose response overflows max_tokens is halved up to this many times
 
+# 400 = model's response didn't fit the output budget (openai SDK's BadRequestError).
+# 413 = the *request* itself (prompt + reserved output) didn't fit the provider's TPM limit -
+# openai-python has no dedicated subclass for 413, it's the generic APIStatusError, which is why
+# this used to slip past the except clause below entirely. Both mean the same thing: this batch
+# is too big, shrink it - so both get the same adaptive-split treatment. Anything else (auth,
+# permissions, not-found, ...) re-raises immediately; splitting can't fix those.
+SIZE_ERROR_STATUSES = {400, 413}
+
 
 def _split_text_in_half(text: str) -> tuple[str, str]:
     """Split text near its midpoint, preferring a paragraph/line boundary over a hard cut."""
@@ -49,7 +57,9 @@ async def _analyze_batch(name: str, batch: list[tuple[str, str]], depth: int = 0
     b_from, b_to = batch[0][0], batch[-1][0]
     try:
         return [await llm.analyze(name, b_from, b_to, batch)]
-    except (llm.LLMError, BadRequestError):
+    except (llm.LLMError, APIStatusError) as e:
+        if isinstance(e, APIStatusError) and e.status_code not in SIZE_ERROR_STATUSES:
+            raise
         if depth >= MAX_SPLIT_DEPTH:
             raise
         if len(batch) > 1:
@@ -156,7 +166,7 @@ async def run_analysis(analysis_id: uuid.UUID) -> None:
                 await _progress(aid, step, f"Analyzing versions {b_from}–{b_to} ({i}/{len(batches)})…", pct)
                 try:
                     outs.extend(await _analyze_batch(name, batch))
-                except (llm.LLMError, BadRequestError) as e:
+                except (llm.LLMError, APIStatusError) as e:
                     raise StepError(step, f"batch {i}/{len(batches)} ({b_from}–{b_to}): {e}")
             out = llm.merge_results(outs)
 
