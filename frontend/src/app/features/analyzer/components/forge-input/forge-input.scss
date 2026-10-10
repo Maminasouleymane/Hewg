@@ -35,6 +35,55 @@
   color: $text-muted;
 }
 
+.suggestions {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  max-height: 260px;
+  overflow-y: auto;
+  background: $bg-elevated;
+  border: 1px solid $accent-border;
+  border-radius: $radius-md;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+
+  .status {
+    padding: 8px 10px;
+    font: 400 12px $font-body;
+    color: $text-muted;
+  }
+
+  button {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    width: 100%;
+    padding: 8px 10px;
+    background: transparent;
+    border: 0;
+    border-radius: $radius-sm;
+    text-align: left;
+    cursor: pointer;
+
+    &:hover, &:focus-visible { background: $bg-surface; }
+  }
+
+  .s-name { font: 500 13px $font-mono; color: $text-primary; }
+  .s-desc {
+    font: 400 11px $font-body;
+    color: $text-muted;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+}
+
 input, select {
   padding: 11px 12px;
   background: $bg-elevated;

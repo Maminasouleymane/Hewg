@@ -1,7 +1,9 @@
 <form class="forge" (ngSubmit)="submit()" #f="ngForm">
   <label class="field pkg">
     <span>Package <em>name or npm link</em></span>
-    <input name="name" [ngModel]="name" (ngModelChange)="onNameChange($event)" (blur)="normalizeName()"
+    <input name="name" [ngModel]="name" (ngModelChange)="onNameChange($event)"
+           (blur)="normalizeName(); onBlur()" (focus)="showSuggestions.set(true)"
+           (keydown.escape)="showSuggestions.set(false)"
            placeholder="rxjs or https://www.npmjs.com/package/rxjs"
            autocomplete="off" spellcheck="false" required />
     <small class="hint" aria-live="polite">
@@ -15,6 +17,22 @@
         Not a valid package name or npm link
       }
     </small>
+    @if (showSuggestions() && (suggestions.isLoading() || suggestions.value().length)) {
+      <ul class="suggestions">
+        @if (suggestions.isLoading()) {
+          <li class="status">Searching…</li>
+        } @else {
+          @for (s of suggestions.value(); track s.name) {
+            <li>
+              <button type="button" (mousedown)="$event.preventDefault()" (click)="selectSuggestion(s)">
+                <span class="s-name">{{ s.name }}</span>
+                @if (s.description) { <span class="s-desc">{{ s.description }}</span> }
+              </button>
+            </li>
+          }
+        }
+      </ul>
+    }
   </label>
   <label class="field">
     <span>From version</span>
