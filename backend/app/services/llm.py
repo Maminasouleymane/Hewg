@@ -10,7 +10,7 @@ from openai import APIConnectionError, APIStatusError, AsyncOpenAI
 from pydantic import ValidationError
 
 from app.config import get_settings
-from app.models.schemas import LLMResult
+from app.models.schemas import Change, LLMResult
 
 PROMPTS_DIR = Path(__file__).parent.parent / "prompts"
 
@@ -148,10 +148,40 @@ def batch_notes(notes: list[tuple[str, str]], max_tokens: int) -> list[list[tupl
     return batches
 
 
+def _build_overview(changes: list[Change], batch_count: int) -> str:
+    """Deterministic summary for a multi-batch merge: counts + highest-risk titles, built
+    from data already computed (severity/category), not another LLM call. A single batch's
+    own summary already has full-range context and reads naturally - this is only used when
+    merging 2+ batches, where naively concatenating each one's isolated summary would just
+    produce a disconnected wall of text."""
+    breaking = [c for c in changes if c.category == "BREAKING"]
+    deprecated = sum(1 for c in changes if c.category == "DEPRECATED")
+    new_features = sum(1 for c in changes if c.category == "NEW_FEATURE")
+    bugfixes = sum(1 for c in changes if c.category == "BUGFIX")
+    critical = sum(1 for c in breaking if c.severity == "CRITICAL")
+
+    overview = (
+        f"{len(changes)} changes across {batch_count} version batches — "
+        f"{len(breaking)} breaking ({critical} critical), "
+        f"{deprecated} deprecation{'' if deprecated == 1 else 's'}, "
+        f"{new_features} new feature{'' if new_features == 1 else 's'}, "
+        f"{bugfixes} bug fix{'' if bugfixes == 1 else 'es'}."
+    )
+
+    highlights = [c for c in changes if c.severity == "CRITICAL"]
+    remaining = max(0, 3 - len(highlights))  # a plain negative slice would wrongly grab extras
+    highlights += [c for c in changes if c.severity == "HIGH" and c not in highlights][:remaining]
+    if highlights:
+        overview += f" Highest risk: {', '.join(c.title for c in highlights[:3])}."
+
+    return overview
+
+
 def merge_results(outputs: list[LLMOutput]) -> LLMOutput:
     """Combine per-batch LLMOutputs into one, recounting totals over the merged changes."""
     changes = [c for out in outputs for c in out.result.changes]
-    summary = " ".join(out.result.summary for out in outputs)
+    summary = (outputs[0].result.summary if len(outputs) == 1
+               else _build_overview(changes, len(outputs)))
     merged = _recount(LLMResult(summary=summary, total_breaking=0, total_deprecated=0,
                                  total_new_features=0, changes=changes))
     return LLMOutput(merged, outputs[0].model, outputs[0].prompt_version,

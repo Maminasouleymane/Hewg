@@ -133,24 +133,73 @@ def test_batch_notes_oversized_entry_gets_its_own_batch():
     assert sum(len(b) for b in batches) == len(notes)  # nothing dropped
 
 
-def _change(id_, category):
-    return Change(id=id_, category=category, severity="HIGH", title="t")
+def _change(id_, category, severity="HIGH", title="t"):
+    return Change(id=id_, category=category, severity=severity, title=title)
 
 
 def test_merge_results_combines_changes_and_recounts():
     out1 = llm.LLMOutput(
-        LLMResult(summary="first half.", changes=[_change("a", "BREAKING")]),
+        LLMResult(summary="first half.", changes=[_change("a", "BREAKING", severity="LOW")]),
         "m", "v1", 10,
     )
     out2 = llm.LLMOutput(
-        LLMResult(summary="second half.", changes=[_change("b", "DEPRECATED"),
-                                                     _change("c", "BREAKING")]),
+        LLMResult(summary="second half.", changes=[_change("b", "DEPRECATED", severity="LOW"),
+                                                     _change("c", "BREAKING", severity="LOW")]),
         "m", "v1", 20,
     )
     merged = llm.merge_results([out1, out2])
     assert [c.id for c in merged.result.changes] == ["a", "b", "c"]
     assert merged.result.total_breaking == 2
     assert merged.result.total_deprecated == 1
-    assert merged.result.summary == "first half. second half."
     assert merged.tokens_used == 30
     assert merged.model == "m" and merged.prompt_version == "v1"
+    # multi-batch: deterministic overview, not the two summaries concatenated
+    assert merged.result.summary == (
+        "3 changes across 2 version batches — 2 breaking (0 critical), "
+        "1 deprecation, 0 new features, 0 bug fixes."
+    )
+
+
+def test_merge_results_keeps_single_batch_summary_unchanged():
+    out = llm.LLMOutput(
+        LLMResult(summary="Hand-written, full-context summary.", changes=[_change("a", "BREAKING")]),
+        "m", "v1", 10,
+    )
+    merged = llm.merge_results([out])
+    assert merged.result.summary == "Hand-written, full-context summary."
+
+
+def test_merge_results_overview_highlights_critical_and_high_by_title():
+    out1 = llm.LLMOutput(
+        LLMResult(summary="a", changes=[
+            _change("a", "BREAKING", severity="CRITICAL", title="Removed ComponentFactoryResolver"),
+            _change("b", "NEW_FEATURE", severity="LOW", title="New signal API"),
+        ]),
+        "m", "v1", 5,
+    )
+    out2 = llm.LLMOutput(
+        LLMResult(summary="b", changes=[
+            _change("c", "BREAKING", severity="HIGH", title="Hammer.js integration removed"),
+        ]),
+        "m", "v1", 5,
+    )
+    merged = llm.merge_results([out1, out2])
+    assert "2 breaking (1 critical)" in merged.result.summary
+    assert "Highest risk: Removed ComponentFactoryResolver, Hammer.js integration removed." \
+        in merged.result.summary
+    assert "New signal API" not in merged.result.summary  # low severity, not a highlight
+
+
+def test_merge_results_overview_caps_highlights_at_three_with_many_criticals():
+    """Regression test: with 4+ CRITICAL items already, `3 - len(highlights)` goes negative -
+    a plain slice with a negative stop would wrongly pull in extra HIGH items instead of none."""
+    criticals = [_change(f"c{i}", "BREAKING", severity="CRITICAL", title=f"fatal-{i}")
+                 for i in range(4)]
+    highs = [_change("h1", "BREAKING", severity="HIGH", title="should-not-appear")]
+    out = llm.LLMOutput(LLMResult(summary="a", changes=criticals + highs), "m", "v1", 5)
+    merged = llm.merge_results([out, out])  # 2 outputs so the overview path is used
+
+    highlights_line = merged.result.summary.split("Highest risk: ")[1]
+    shown_titles = highlights_line.rstrip(".").split(", ")
+    assert "should-not-appear" not in shown_titles
+    assert len(shown_titles) == 3
